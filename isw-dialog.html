@@ -1,0 +1,106 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../paper-dialog-behavior/paper-dialog-behavior.html">
+<link rel="import" href="../paper-dialog-behavior/paper-dialog-shared-styles.html">
+
+<!--
+`isw-dialog`
+A paper-dialog with remote-control.
+
+Place your dialog somewhere save from stacking-context, and access it over a remote in your view.
+
+    <isw-dialog name="myUniqueDialogName">
+      <h2>Header</h2>
+      <paper-dialog-scrollable>
+        Lorem ipsum...
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>Accept</paper-button>
+      </div>
+    </isw-dialog>
+
+    <isw-dialog-remote
+        id="dialogRemote"
+        dialog="myUniqueDialogName"
+        on-iron-overlay-closed="_closed">
+    </isw-dialog-remote>
+
+    open() {
+      this.$.dialogRemote.open();
+    }
+    _closed( event ) {
+      console.log( event );
+    }
+
+@demo demo/index.html
+-->
+
+<dom-module id="isw-dialog">
+	<template>
+		<style include="paper-dialog-shared-styles"></style>
+		<slot></slot>
+	</template>
+
+	<script>
+		Polymer({
+			is: 'isw-dialog',
+			behaviors: [ Polymer.PaperDialogBehavior ],
+
+			properties: {
+				name: {
+					type: String
+				}
+			},
+
+
+			listeners: {
+				'iron-overlay-canceled': '_ironOverlayCanceled',
+				'iron-overlay-closed': '_ironOverlayClosed',
+				'iron-overlay-opened': '_ironOverlayOpened'
+			},
+
+			/**
+			 * Send `iron-overlay-canceled` to the remote.
+			 */
+			_ironOverlayCanceled: function( event ){
+				document.dispatchEvent( new CustomEvent( 'isw-dialog-' + this.name + '-canceled', { detail: event.detail } ) );
+			},
+
+			/**
+			 * Send `iron-overlay-closed` to the remote.
+			 */
+			_ironOverlayClosed: function( event ){
+				document.dispatchEvent( new CustomEvent( 'isw-dialog-' + this.name + '-closed', { detail: event.detail } ) );
+			},
+
+			/**
+			 * Send `iron-overlay-opened` to the remote.
+			 */
+			_ironOverlayOpened: function( event ){
+				document.dispatchEvent( new CustomEvent( 'isw-dialog-' + this.name + '-opened', { detail: event.detail } ) );
+			},
+
+
+			ready: function() {
+				// Listen to remote 'isw-dialog-name-action' events.
+				document.addEventListener('isw-dialog-' + this.name + '-open', e => this._remoteOpen( e ));
+				document.addEventListener('isw-dialog-' + this.name + '-close', e => this._remoteClose( e ));
+			},
+
+			/**
+			 * Execute `open` from remote.
+			 */
+			_remoteOpen: function() {
+				this.open();
+			},
+
+			/**
+			 * Execute `close` from remote.
+			 */
+			_remoteClose: function() {
+				this.close();
+			}
+		});
+	</script>
+</dom-module>

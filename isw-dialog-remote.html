@@ -1,0 +1,71 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`isw-dialog-remote`
+A paper-dialog with remote-control.
+
+@demo demo/index.html
+-->
+
+<dom-module id="isw-dialog-remote">
+	<script>
+		class IswDialogRemote extends Polymer.Element {
+			static get is() {
+				return 'isw-dialog-remote';
+			}
+
+			static get properties() {
+				return {
+					dialog: {
+						type: String
+					}
+				};
+			}
+
+
+			/**
+			 * Send `open` to the dialog.
+			 */
+			open() {
+				document.dispatchEvent( new CustomEvent( 'isw-dialog-' + this.dialog + '-open' ) );
+			}
+
+			/**
+			 * Send `close` to the dialog.
+			 */
+			close() {
+				document.dispatchEvent( new CustomEvent( 'isw-dialog-' + this.dialog + '-close' ) );
+			}
+
+
+			ready() {
+				// Listen to dialog 'isw-dialog-dialog-action' events.
+				document.addEventListener('isw-dialog-' + this.dialog + '-canceled', e => this._remoteCanceled( e ));
+				document.addEventListener('isw-dialog-' + this.dialog + '-closed', e => this._remoteClosed( e ));
+				document.addEventListener('isw-dialog-' + this.dialog + '-opened', e => this._remoteOpened( e ));
+			}
+
+			/**
+			 * Execute `iron-overlay-closed` from remote.
+			 */
+			_remoteCanceled( event) {
+				this.dispatchEvent( new CustomEvent( 'iron-overlay-canceled', { detail: event.detail } ) );
+			}
+
+			/**
+			 * Execute `iron-overlay-closed` from remote.
+			 */
+			_remoteClosed( event) {
+				this.dispatchEvent( new CustomEvent( 'iron-overlay-closed', { detail: event.detail } ) );
+			}
+
+			/**
+			 * Execute `iron-overlay-closed` from remote.
+			 */
+			_remoteOpened( event) {
+				this.dispatchEvent( new CustomEvent( 'iron-overlay-opened', { detail: event.detail } ) );
+			}
+		}
+		window.customElements.define( IswDialogRemote.is, IswDialogRemote );
+	</script>
+</dom-module>

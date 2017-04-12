@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+	<title>isw-dialog demo</title>
+
+	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+	<link rel="import" href="../../paper-button/paper-button.html">
+	<link rel="import" href="../../paper-styles/paper-styles.html">
+	<link rel="import" href="../isw-dialog.html">
+	<link rel="import" href="../isw-dialog-remote.html">
+
+	<style is="custom-style" include="demo-pages-shared-styles"></style>
+
+	<style>
+		body {
+			margin: 32px;
+			font-family: 'Roboto', 'Noto', sans-serif;
+			line-height: 1.5;
+			background-color: #EEEEEE;
+		}
+	</style>
+</head>
+<body>
+	<dom-module id="demo-element-dialog">
+		<template>
+			<isw-dialog id="dialog" name="myTestDialog">
+				<p>Test Dialog</p>
+				<div class="buttons">
+					<paper-button dialog-dismiss>Cancel</paper-button>
+					<paper-button dialog-confirm>Accept</paper-button>
+				</div>
+			</isw-dialog>
+		</template>
+		<script>
+			HTMLImports.whenReady( function() {
+				class DemoElementDialog extends Polymer.Element {
+					static get is() {
+						return 'demo-element-dialog';
+					}
+
+					open() {
+						this.$.dialog.open();
+					}
+				}
+
+				window.customElements.define( DemoElementDialog.is, DemoElementDialog );
+			} );
+		</script>
+	</dom-module>
+
+	<dom-module id="demo-element-remote">
+		<template>
+			<h1>Dialog Remote Control</h1>
+
+			<p>See console for events the remote received.</p>
+
+			<paper-button on-tap="open">Open</paper-button>
+
+			<isw-dialog-remote
+					id="remote"
+					dialog="myTestDialog"
+					on-iron-overlay-canceled="_canceled"
+					on-iron-overlay-closed="_closed"
+					on-iron-overlay-opened="_opened"></isw-dialog-remote>
+		</template>
+		<script>
+			HTMLImports.whenReady( function() {
+				class DemoElementRemote extends Polymer.Element {
+					static get is() {
+						return 'demo-element-remote';
+					}
+
+					open() {
+						this.$.remote.open();
+					}
+
+					_canceled( event ) {
+						console.log( event );
+					}
+
+					_closed( event ) {
+						console.log( event );
+					}
+
+					_opened( event ) {
+						console.log( event );
+					}
+				}
+				window.customElements.define( DemoElementRemote.is, DemoElementRemote );
+			} );
+		</script>
+	</dom-module>
+
+	<demo-element-dialog></demo-element-dialog>
+	<demo-element-remote></demo-element-remote>
+</body>
+</html>
