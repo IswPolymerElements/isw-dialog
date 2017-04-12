@@ -4,6 +4,8 @@ A paper-dialog with remote-control.
 
 Place your dialog somewhere save from stacking-context, and access it over a remote in your view.
 
+Designed as a workshift solution till the stacking context issues in paper-input are fixed.
+
 ```html
 <isw-dialog name="myUniqueDialogName">
   <h2>Header</h2>
