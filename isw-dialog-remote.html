@@ -16,12 +16,36 @@ A paper-dialog with remote-control.
 
 			static get properties() {
 				return {
+					/**
+					 * Name of the dialog to control.
+					 */
 					dialog: {
 						type: String
+					},
+					/**
+					 * Data for the dialog.
+					 */
+					data: {
+						type: Object,
+						notify: true
 					}
 				};
 			}
 
+			static get observers() {
+				return [
+					'_dataChanged(data.*)'
+				]
+			}
+
+			ready() {
+				// Listen to dialog 'isw-dialog-dialog-action' events.
+				document.addEventListener( 'isw-dialog-' + this.dialog + '-canceled', e => this._remoteCanceled( e ) );
+				document.addEventListener( 'isw-dialog-' + this.dialog + '-closed', e => this._remoteClosed( e ) );
+				document.addEventListener( 'isw-dialog-' + this.dialog + '-opened', e => this._remoteOpened( e ) );
+
+				super.ready();
+			}
 
 			/**
 			 * Send `open` to the dialog.
@@ -37,32 +61,31 @@ A paper-dialog with remote-control.
 				document.dispatchEvent( new CustomEvent( 'isw-dialog-' + this.dialog + '-close' ) );
 			}
 
-
-			ready() {
-				// Listen to dialog 'isw-dialog-dialog-action' events.
-				document.addEventListener('isw-dialog-' + this.dialog + '-canceled', e => this._remoteCanceled( e ));
-				document.addEventListener('isw-dialog-' + this.dialog + '-closed', e => this._remoteClosed( e ));
-				document.addEventListener('isw-dialog-' + this.dialog + '-opened', e => this._remoteOpened( e ));
+			/**
+			 * Send `data-changed` to the dialog.
+			 */
+			_dataChanged( data ) {
+				document.dispatchEvent( new CustomEvent( 'isw-dialog-' + this.dialog + '-data-changed',  { detail: this.data } ) );
 			}
 
 			/**
 			 * Execute `iron-overlay-closed` from remote.
 			 */
-			_remoteCanceled( event) {
+			_remoteCanceled( event ) {
 				this.dispatchEvent( new CustomEvent( 'iron-overlay-canceled', { detail: event.detail } ) );
 			}
 
 			/**
 			 * Execute `iron-overlay-closed` from remote.
 			 */
-			_remoteClosed( event) {
+			_remoteClosed( event ) {
 				this.dispatchEvent( new CustomEvent( 'iron-overlay-closed', { detail: event.detail } ) );
 			}
 
 			/**
 			 * Execute `iron-overlay-closed` from remote.
 			 */
-			_remoteOpened( event) {
+			_remoteOpened( event ) {
 				this.dispatchEvent( new CustomEvent( 'iron-overlay-opened', { detail: event.detail } ) );
 			}
 		}

@@ -9,6 +9,7 @@
 	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
 	<link rel="import" href="../../paper-button/paper-button.html">
+	<link rel="import" href="../../paper-input/paper-input.html">
 	<link rel="import" href="../../paper-styles/paper-styles.html">
 	<link rel="import" href="../isw-dialog.html">
 	<link rel="import" href="../isw-dialog-remote.html">
@@ -27,8 +28,9 @@
 <body>
 	<dom-module id="demo-element-dialog">
 		<template>
-			<isw-dialog id="dialog" name="myTestDialog">
+			<isw-dialog id="dialog" name="myTestDialog" data="{{_data}}">
 				<p>Test Dialog</p>
+				<p>Text from remote: [[_data.text]]</p>
 				<div class="buttons">
 					<paper-button dialog-dismiss>Cancel</paper-button>
 					<paper-button dialog-confirm>Accept</paper-button>
@@ -42,8 +44,13 @@
 						return 'demo-element-dialog';
 					}
 
-					open() {
-						this.$.dialog.open();
+					static get properties() {
+						return {
+							_data: {
+								type: Object,
+								notify: true
+							}
+						};
 					}
 				}
 
@@ -58,11 +65,14 @@
 
 			<p>See console for events the remote received.</p>
 
+			<paper-input label="Text send to the dialog" value="{{_data.text}}"></paper-input>
+
 			<paper-button on-tap="open">Open</paper-button>
 
 			<isw-dialog-remote
 					id="remote"
 					dialog="myTestDialog"
+					data="[[_data]]"
 					on-iron-overlay-canceled="_canceled"
 					on-iron-overlay-closed="_closed"
 					on-iron-overlay-opened="_opened"></isw-dialog-remote>
@@ -72,6 +82,18 @@
 				class DemoElementRemote extends Polymer.Element {
 					static get is() {
 						return 'demo-element-remote';
+					}
+
+					static get properties() {
+						return {
+							_data: {
+								type: Object,
+								value: {
+									text: 'Some text.'
+								},
+								notify: true
+							}
+						};
 					}
 
 					open() {

@@ -50,16 +50,33 @@ Designed as a workshift solution till the stacking context issues in paper-input
 			behaviors: [ Polymer.PaperDialogBehavior ],
 
 			properties: {
+				/**
+				 * Unique name of the dialog.
+				 */
 				name: {
 					type: String
+				},
+				/**
+				 * Data from the remote.
+				 */
+				data: {
+					type: Object,
+					notify: true
 				}
 			},
 
-
+			// Listen to iron-overlay events.
 			listeners: {
 				'iron-overlay-canceled': '_ironOverlayCanceled',
 				'iron-overlay-closed': '_ironOverlayClosed',
 				'iron-overlay-opened': '_ironOverlayOpened'
+			},
+
+			ready: function() {
+				// Listen to remote 'isw-dialog-name-action' events.
+				document.addEventListener('isw-dialog-' + this.name + '-open', e => this._remoteOpen( e ));
+				document.addEventListener('isw-dialog-' + this.name + '-close', e => this._remoteClose( e ));
+				document.addEventListener('isw-dialog-' + this.name + '-data-changed', e => this._remoteDataChanged( e ));
 			},
 
 			/**
@@ -83,13 +100,6 @@ Designed as a workshift solution till the stacking context issues in paper-input
 				document.dispatchEvent( new CustomEvent( 'isw-dialog-' + this.name + '-opened', { detail: event.detail } ) );
 			},
 
-
-			ready: function() {
-				// Listen to remote 'isw-dialog-name-action' events.
-				document.addEventListener('isw-dialog-' + this.name + '-open', e => this._remoteOpen( e ));
-				document.addEventListener('isw-dialog-' + this.name + '-close', e => this._remoteClose( e ));
-			},
-
 			/**
 			 * Execute `open` from remote.
 			 */
@@ -102,6 +112,20 @@ Designed as a workshift solution till the stacking context issues in paper-input
 			 */
 			_remoteClose: function() {
 				this.close();
+			},
+
+			/**
+			 * Execute `data-changed` from remote, update data.
+			 */
+			_remoteDataChanged: function( event ) {
+				// Set data.
+				this.data = event.detail;
+
+				// Notify all the sub properties.
+				for( var key in event.detail ) {
+					if ( !event.detail.hasOwnProperty( key ) ) continue;
+					this.notifyPath( 'data.' + key );
+				}
 			}
 		});
 	</script>
