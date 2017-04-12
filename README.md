@@ -7,10 +7,10 @@ Place your dialog somewhere save from stacking-context, and access it over a rem
 Designed as a workshift solution till the stacking context issues in paper-input are fixed.
 
 ```html
-<isw-dialog name="myUniqueDialogName">
+<isw-dialog name="myUniqueDialogName" data="{{dataFromRemote}}">
   <h2>Header</h2>
   <paper-dialog-scrollable>
-    Lorem ipsum...
+    Lorem ipsum: [[dataFromRemote.someTextProperty]]
   </paper-dialog-scrollable>
   <div class="buttons">
     <paper-button dialog-dismiss>Cancel</paper-button>
@@ -23,6 +23,7 @@ Designed as a workshift solution till the stacking context issues in paper-input
 <isw-dialog-remote
     id="dialogRemote"
     dialog="myUniqueDialogName"
+    data="[[dataForDialog]]"
     on-iron-overlay-closed="_closed">
 </isw-dialog-remote>
 ```
