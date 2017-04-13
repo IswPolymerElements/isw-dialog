@@ -13,14 +13,12 @@
 	<link rel="import" href="../../paper-dialog/paper-dialog.html">
 	<link rel="import" href="../../paper-input/paper-input.html">
 	<link rel="import" href="../../paper-styles/paper-styles.html">
+
 	<link rel="import" href="../isw-dialog.html">
 	<link rel="import" href="../isw-dialog-remote.html">
 
-	<style is="custom-style" include="demo-pages-shared-styles"></style>
-
 	<style>
 		body {
-			margin: 32px;
 			font-family: 'Roboto', 'Noto', sans-serif;
 			line-height: 1.5;
 			background-color: #FFFFFF;
@@ -76,7 +74,7 @@
 			<style>
 				:host {
 					display: block;
-					padding: 20px;
+					padding: 32px;
 				}
 
 				paper-button {
@@ -84,14 +82,11 @@
 					background: #00508C;
 				}
 			</style>
-			<h4>Dialog Remote Control</h4>
 
+			<h3>Dialog Remote Control</h3>
 			<p>See console for events the remote received.</p>
 
-			<paper-input label="Text send to the dialog" value="{{_data.text}}"></paper-input>
-
-			<br>
-
+			<paper-input label="Text send to the dialog" value="{{_data.text}}"></paper-input><br>
 			<paper-button on-tap="openIsw" raised>Open isw-dialog</paper-button>
 			<paper-button on-tap="openPaper" raised>Open paper-dialog</paper-button>
 
@@ -112,6 +107,7 @@
 					on-iron-overlay-closed="_closed"
 					on-iron-overlay-opened="_opened"></isw-dialog-remote>
 		</template>
+
 		<script>
 			HTMLImports.whenReady( function() {
 				class DemoElementView extends Polymer.Element {
