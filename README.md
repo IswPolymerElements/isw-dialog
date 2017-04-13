@@ -6,6 +6,8 @@ Place your dialog somewhere save from stacking-context issues, and access it ove
 
 Designed as a workshift solution till the stacking context issues in paper-dialog are fixed.
 
+Demo Link: https://www.webcomponents.org/element/IswPolymerElements/isw-dialog/demo/demo/
+
 ```html
 <isw-dialog name="myUniqueDialogName" data="{{dataFromRemote}}">
   <h2>Header</h2>
