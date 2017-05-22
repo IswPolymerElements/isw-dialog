@@ -3,7 +3,7 @@
   "description": "Material Design Polymer 2.0 Dialog, stacking context safe with remote-control.",
   "main": "isw-dialog.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0-rc.2",
+    "polymer": "Polymer/polymer#^2.0.0",
     "paper-dialog-behavior": "PolymerElements/paper-dialog-behavior#^2.0.0"
   },
   "devDependencies": {
